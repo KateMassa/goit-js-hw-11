@@ -23,6 +23,16 @@ body {
   color: #808080;
   padding-left: 16px;
 }
+
+/*#search-input:hover {
+  border: 1px solid #000;
+}*/
+
+#search-input:focus {
+  background-color: #fff;
+  border: #4e75ff;
+}
+
 .search-button {
   border-radius: 8px;
   width: 91px;
@@ -30,11 +40,14 @@ body {
   margin-left: 8px;
   background-color: #4e75ff;
   color: #fff;
-  font-family: Montserrat;
   font-size: 16px;
   font-weight: 500;
   line-height: 24px; /* 150% */
   letter-spacing: 0.04em;
+}
+
+.search-button:hover {
+  background-color: #6c8cff;
 }
 
 #gallery {
@@ -44,6 +57,13 @@ body {
   margin: 20px;
 }
 
+#loader-wrapper {
+  justify-content: center;
+  margin-top: 32px;
+  font-size: 16px;
+  font-weight: 400;
+  color: #2e2f42;
+}
 .image {
   margin: 10px;
 }

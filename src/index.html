@@ -7,11 +7,7 @@
     <link rel="stylesheet" href="./css/styles.css" />
   </head>
   <body>
-    <div id="loader-wrapper">
-      <div class="css-loader"></div>
-    </div>
     <form id="search-form">
-      <label for="search-input"></label>
       <input
         type="text"
         id="search-input"
@@ -24,7 +20,11 @@
       </button>
     </form>
 
-    <div id="gallery"></div>
+    <div id="loader-wrapper">
+      <div class="css-loader"></div>
+    </div>
+
+    <div id="gallery" class="gallery-container"></div>
 
     <script type="module" src="./js/main.js"></script>
   </body>
