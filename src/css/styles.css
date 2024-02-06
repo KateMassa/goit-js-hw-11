@@ -60,7 +60,7 @@ body {
 .image-card {
   width: calc((100% - 48px) / 3);
   position: relative;
-  display: inline-block;
+  display: inline-flex;
   box-sizing: border-box;
   vertical-align: top;
   border: 1px solid #808080;
@@ -68,7 +68,6 @@ body {
 
 .image-card img {
   width: 100%;
-  display: block;
 }
 
 .image-info {
@@ -76,21 +75,24 @@ body {
   flex-direction: row;
   justify-content: center;
   position: absolute;
-  padding-left: 20px;
   bottom: 0;
   left: 0;
   width: 100%;
   background: #fff;
+  gap: 20px;
 }
 
 .image-info p {
   padding-top: 4px;
   margin: 0;
-  width: max-content;
+  width: fit-content;
   height: 40px;
-  align-items: center;
-  gap: 32px;
   margin-top: 5px;
+}
+
+.text {
+  display: flex;
+  justify-content: center;
 }
 
 .loader {

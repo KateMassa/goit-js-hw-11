@@ -83,10 +83,10 @@ function createImageCard(image) {
   const info = document.createElement('div');
   info.classList.add('image-info');
   info.innerHTML = `
-    <p><strong>Likes:</strong> ${image.likes}</p>
-    <p><strong>Views:</strong> ${image.views}</p>
-    <p><strong>Comments:</strong> ${image.comments}</p>
-    <p><strong>Downloads:</strong> ${image.downloads}</p>
+    <p><strong>Likes:</strong> <span class="text">${image.likes}</span></p>
+    <p><strong>Views:</strong><span class="text"> ${image.views}</span></p>
+    <p><strong>Comments:</strong><span class="text"> ${image.comments}</span></p>
+    <p><strong>Downloads:</strong><span class="text"> ${image.downloads}</span></p>
   `;
   card.appendChild(info);
 
