@@ -10,7 +10,9 @@
     "push": "git add . && git commit -m 'update' && git push"
   },
   "devDependencies": {
+    "css-loader": "^6.10.0",
     "glob": "^8.1.0",
+    "style-loader": "^3.3.4",
     "vite": "^4.0.5"
   },
   "author": "Kateryna Massa <catherineorlova27@gmail.com>",
