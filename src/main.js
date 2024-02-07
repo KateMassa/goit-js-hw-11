@@ -3,100 +3,74 @@ import 'izitoast/dist/css/iziToast.min.css';
 import SimpleLightbox from 'simplelightbox';
 import 'simplelightbox/dist/simple-lightbox.min.css';
 
-const apiKey = '42152673-4f3b2f2010df91e54c05d1b70';
-const searchForm = document.getElementById('search-form');
-const searchInput = document.getElementById('search-input');
+const form = document.getElementById('search-form');
 const gallery = document.getElementById('gallery');
 const loader = document.querySelector('.loader');
 
-loader.style.display = 'none';
+const searchParams = {
+  key: '42152673-4f3b2f2010df91e54c05d1b70',
+  image_type: 'photo',
+  orientation: 'horizontal',
+  safesearch: true,
+  q: '',
+};
 
-searchForm.addEventListener('submit', function (e) {
+form.addEventListener('submit', function (e) {
   e.preventDefault();
   loader.style.display = 'block';
-  const searchName = searchInput.value.trim();
-
-  if (!searchName) {
-    iziToast.warning({
-      title: 'Attention',
-      message: 'Please enter a search name.',
-    });
-
-    // Hide loader if no search term entered
-    loader.style.display = 'none';
-    return;
-  }
-
-  searchImages(searchName);
+  const inputValue = e.target.elements.input.value;
+  searchParams.q = inputValue;
+  getPhotoByName()
+    .then(images => createGallery(images))
+    .catch(error => console.log(error));
+  e.target.reset();
 });
 
-function searchImages(searchTerm) {
-  // Get loader element again
-  const loader = document.querySelector('.loader');
+function getPhotoByName() {
+  const urlParams = new URLSearchParams(searchParams);
+  return fetch(`https://pixabay.com/api/?${urlParams}`).then(res => {
+    if (res.ok) {
+      return res.json();
+    } else {
+      throw new Error(res.status);
+    }
+  });
+}
 
-  // Clear gallery before new search
-  gallery.innerHTML = '';
-
-  const apiUrl = `https://pixabay.com/api/?key=${apiKey}&q=${searchTerm}&image_type=photo&orientation=horizontal&safesearch=true`;
-
-  fetch(apiUrl)
-    .then(response => response.json())
-    .then(data => {
-      if (data.hits.length > 0) {
-        data.hits.forEach(image => {
-          const card = createImageCard(image);
-          gallery.appendChild(card);
-        });
-
-        const modal = new SimpleLightbox('.gallery a', {
-          // Refresh SimpleLightbox after adding new images
-          elements: data.hits.map(image => ({ src: image.largeImageURL })),
-        });
-        modal.refresh();
-      } else {
-        iziToast.error({
-          title: 'Error',
-          message:
-            'Sorry, there are no images matching your search query. Please try again.',
-        });
-      }
-    })
-    .catch(error => {
-      console.error('An error occurred when executing an HTTP request:', error);
-    })
-    .finally(() => {
-      // Hide loader after HTTP request
-      loader.style.display = 'none';
+function createGallery(images) {
+  if (images.hits.length === 0) {
+    iziToast.show({
+      message:
+        'Sorry, there are no images matching your search query. Please try again!',
+      messageColor: '#FFFFFF',
+      backgroundColor: '#EF4040',
+      position: 'topRight',
+      messageSize: '16px',
+      messageLineHeight: '24px',
+      maxWidth: '432px',
     });
-}
-
-function createImageCard(image) {
-  const card = document.createElement('div');
-  card.classList.add('image-card');
-
-  const img = document.createElement('img');
-  img.src = image.webformatURL;
-  img.alt = image.tags;
-  img.dataset.largeImage = image.largeImageURL;
-  card.appendChild(img);
-
-  const info = document.createElement('div');
-  info.classList.add('image-info');
-  info.innerHTML = `
-    <p><strong>Likes:</strong> <span class="text">${image.likes}</span></p>
-    <p><strong>Views:</strong><span class="text"> ${image.views}</span></p>
-    <p><strong>Comments:</strong><span class="text"> ${image.comments}</span></p>
-    <p><strong>Downloads:</strong><span class="text"> ${image.downloads}</span></p>
-  `;
-  card.appendChild(info);
-
-  img.addEventListener('click', openModal);
-
-  return card;
-}
-
-function openModal(event) {
-  const largeImageURL = event.target.dataset.largeImage;
-  const modal = new SimpleLightbox([{ src: largeImageURL }]);
-  modal.show();
+    gallery.innerHTML = '';
+  } else {
+    const link = images.hits
+      .map(
+        image => `<a class="gallery-link" href="${image.largeImageURL}">
+        <img class="gallery-image"
+        src="${image.webformatURL}"
+        alt="${image.tags}"
+         </a>
+         <div class="image-info">
+          <p ><strong>Likes:</strong> <span class="text">${image.likes}</span></p>
+          <p ><strong>Views:</strong> <span class="text">${image.views}</span></p>
+          <p ><strong>Comments:</strong> <span class="text">${image.comments}</span></p>
+          <p ><strong>Downloads:</strong> <span class="text">${image.downloads}</span></p>
+          </div>
+          
+        `
+      )
+      .join('');
+    gallery.innerHTML = link;
+  }
+  let lightBox = new SimpleLightbox('.gallery-link');
+  lightBox.refresh();
+  loader.style.display = 'none';
 }
